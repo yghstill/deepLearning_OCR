@@ -189,10 +189,10 @@ class Segmentation(object):
             h = end_y - start_y
             key_to_segmentation["id"] = [(start_x, start_y, w, h), ]
         except:
-            print "Exception in user code:"
-            print '-' * 60
+            print("Exception in user code:")
+            print('-' * 60)
             traceback.print_exc(file=sys.stdout)
-            print '-' * 60
+            print('-' * 60)
             key_to_segmentation = {}
 
         debug_path = self.debug_path
