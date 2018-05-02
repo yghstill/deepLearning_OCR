@@ -187,8 +187,7 @@ class PreprocessResizeKeepRatioFillBG(object):
         start_width = (width_large - width_small) / 2
         start_height = (height_large - height_small) / 2
 
-        img_large[start_height:start_height + height_small,
-                  start_width:start_width + width_small] = img_small
+        img_large[int(start_height):int(start_height + height_small), int(start_width):int(start_width + width_small)] = img_small
         return img_large
 
     def do(self, cv2_img):

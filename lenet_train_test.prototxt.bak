@@ -201,14 +201,14 @@ layer {
   top: "fc10000"
 }
 layer {
-  name: "fc6492"
+  name: "fc6503"
   type: "InnerProduct"
   # learning rate and decay multipliers for the weights
   param { lr_mult: 1 }
   # learning rate and decay multipliers for the biases
   param { lr_mult: 2 }
   inner_product_param {
-    num_output: 6492
+    num_output: 6503
     weight_filler {
       type: "gaussian"
       std: 0.01
@@ -219,12 +219,12 @@ layer {
     }
   }
   bottom: "fc10000"
-  top: "fc6492"
+  top: "fc6503"
 }
 layer {
   name: "accuracy"
   type: "Accuracy"
-  bottom: "fc6492"
+  bottom: "fc6503"
   bottom: "label"
   top: "accuracy"
   include {
@@ -234,7 +234,7 @@ layer {
 layer {
   name: "loss"
   type: "SoftmaxWithLoss"
-  bottom: "fc6492"
+  bottom: "fc6503"
   bottom: "label"
   top: "loss"
 }

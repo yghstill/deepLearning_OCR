@@ -1,3 +1,4 @@
+#! /usr/bin/env python
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
@@ -15,17 +16,57 @@ from deep_ocr.id_cards.char_set import CharSet
 from deep_ocr.reco_text_line import RecoTextLine
 from deep_ocr.reco_text_line import RectImageClassifier
 
+
+
 if __name__ == "__main__":
 
-    path_img = os.path.expanduser("/opt/deep_ocr/data/id_card_img.jpg")
-    debug_path = os.path.expanduser("/tmp/debug")
+    description = '''
+        # Docker config
+        CAFFE_MODEL=/opt/deep_ocr/data/trained_models/mnist_model
+        DEEP_OCR_ROOT=/opt/deep_ocr
+        WORKSPACE=/workspace
+
+        # PC
+        CAFFE_MODEL=/root/data/deep_ocr_trained_models/mnist_model
+        DEEP_OCR_ROOT=/root/workspace/deep_ocr
+        WORKSPACE=/root/data/deep_ocr_workspace
+
+        deep_ocr_id_card_reco --img $DEEP_OCR_ROOT/data/id_card_img.jpg \
+            --debug_path /tmp/debug \
+            --cls_sim ${WORKSPACE}/data/chongdata_caffe_cn_sim_digits_64_64 \
+            --cls_ua ${WORKSPACE}/data/chongdata_caffe_cn_sim_digits_64_64
+
+        deep_ocr_id_card_reco --img ~/data/id_card_front \
+            --debug_path /tmp/debug \
+            --cls_sim ${WORKSPACE}/data/chongdata_caffe_cn_sim_digits_64_64 \
+            --cls_ua ${WORKSPACE}/data/chongdata_caffe_cn_sim_digits_64_64
+    '''
+
+    parser = argparse.ArgumentParser(
+        description=description, formatter_class=RawTextHelpFormatter)
+    parser.add_argument('--img', dest='img',
+                        default=None, required=True,
+                        help='id card image to reco')
+    parser.add_argument('--debug_path', dest='debug_path',
+                        default=None, required=False,
+                        help='debug path')
+    parser.add_argument('--cls_sim', dest='cls_sim',
+                        default=None, required=False,
+                        help='cls sim')
+    parser.add_argument('--cls_ua', dest='cls_ua',
+                        default=None, required=False,
+                        help='cls ua')
+
+    options = parser.parse_args()
+    path_img = os.path.expanduser(options.img)
+    debug_path = os.path.expanduser(options.debug_path)
     if debug_path is not None:
         if os.path.isdir(debug_path):
             shutil.rmtree(debug_path)
         os.makedirs(debug_path)
 
-    cls_dir_sim = os.path.expanduser("/workspace/data/chongdata_caffe_cn_sim_digits_64_64")
-    cls_dir_ua = os.path.expanduser("/workspace/data/chongdata_caffe_cn_sim_digits_64_64")
+    cls_dir_sim = os.path.expanduser(options.cls_sim)
+    cls_dir_ua = os.path.expanduser(options.cls_ua)
 
     caffe_cls_builder = CaffeClsBuilder()
     cls_sim = caffe_cls_builder.build(cls_dir=cls_dir_sim,)
@@ -87,4 +128,4 @@ if __name__ == "__main__":
     if debug_path is not None:
         path_debug_image_mask = os.path.join(
             debug_path, "reco_debug_01_image_mask.jpg")
-cv2.imwrite(path_debug_image_mask, id_card_img_mask)
+        cv2.imwrite(path_debug_image_mask, id_card_img_mask)

@@ -41,7 +41,7 @@ class Segmentation(object):
 #  
         ## remove right head profile
         left_half_id_card_img_mask = np.copy(id_card_img_mask)
-        left_half_id_card_img_mask[:, norm_width/2:] = 0
+        left_half_id_card_img_mask[:, int(norm_width/2):] = 0
 
         ## Try to find text lines and chars
         horizontal_sum = np.sum(left_half_id_card_img_mask, axis=1)
@@ -90,7 +90,7 @@ class Segmentation(object):
 
         ## remove right head profile
         left_half_id_card_img_mask = np.copy(id_card_img_mask)
-        left_half_id_card_img_mask[:, norm_width/2:] = 0
+        left_half_id_card_img_mask[:, int(norm_width/2):] = 0
 
         ## Try to find text lines and chars
         vertical_peek_ranges2d = []

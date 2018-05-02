@@ -17,15 +17,15 @@ from deep_ocr.reco_text_line import RectImageClassifier
 
 if __name__ == "__main__":
 
-    path_img = os.path.expanduser("/home/ygh/flask/img_card.jpg")
-    debug_path = os.path.expanduser("/home/ygh/workspace/debug")
+    path_img = os.path.expanduser("/home/user/Projects/data/id_card_img.jpg")
+    debug_path = os.path.expanduser("/home/user/Project/data/debug")
     if debug_path is not None:
         if os.path.isdir(debug_path):
             shutil.rmtree(debug_path)
         os.makedirs(debug_path)
 
-    cls_dir_sim = os.path.expanduser("/home/ygh/workspace/data/chongdata_caffe_cn_sim_digits_64_64")
-    cls_dir_ua = os.path.expanduser("/home/ygh/workspace/data/chongdata_caffe_cn_sim_digits_64_64")
+    cls_dir_sim = os.path.expanduser("/home/user/Projects/deep_ocr_workspace/data/chongdata_caffe_cn_sim_digits_64_64")
+    cls_dir_ua = os.path.expanduser("/home/user/Projects/deep_ocr_workspace/data/chongdata_caffe_cn_sim_digits_64_64")
 
     caffe_cls_builder = CaffeClsBuilder()
     cls_sim = caffe_cls_builder.build(cls_dir=cls_dir_sim,)
@@ -73,8 +73,7 @@ if __name__ == "__main__":
                 line_debug_path = os.path.join(debug_path, line_debug_path)
                 reco_text_line.debug_path = line_debug_path
             reco_text_line.char_set = char_set_data[key]
-            caffe_cls = caffe_classifiers[
-                char_set_data[key]["caffe_cls"]]
+            caffe_cls = caffe_classifiers[char_set_data[key]["caffe_cls"]]
             ocr_res = reco_text_line.do(boundary2binimgs, segment, caffe_cls)
             key_ocr_res[key].append(ocr_res)
     print("ocr res:")
@@ -82,9 +81,11 @@ if __name__ == "__main__":
         print("="*60)
         print(key)
         for res_i in key_ocr_res[key]:
+            print(type(res_i))
             print(res_i.encode("utf-8"))
+
 
     if debug_path is not None:
         path_debug_image_mask = os.path.join(
             debug_path, "reco_debug_01_image_mask.jpg")
-cv2.imwrite(path_debug_image_mask, id_card_img_mask)
+        cv2.imwrite(path_debug_image_mask, id_card_img_mask)
