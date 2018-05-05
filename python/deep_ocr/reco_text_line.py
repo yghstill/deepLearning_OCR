@@ -132,7 +132,8 @@ class RecoTextLine(object):
             rects, boundaries, bin_images)
         if ocr_res is not None:
             print("before merge..")
-            print(ocr_res.encode("utf-8"))
+            #print(ocr_res.encode("utf-8"))
+            print(ocr_res)
             peek_ranges = merge_peek_ranges_mini_non_digits(
                 peek_ranges, char_w, ocr_res)
             rects = self.convert_peek_ranges_into_rects(
@@ -140,7 +141,8 @@ class RecoTextLine(object):
             ocr_res = self.rect_img_clf.do_images_maxproba(
                 rects, boundaries, bin_images)
             print("after merge...")
-            print(ocr_res.encode("utf-8"))
+            #print(ocr_res.encode("utf-8"))
+            print(ocr_res)
 
 #        ## end end segmenetation
 #        if self.debug_path is not None:

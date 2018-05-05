@@ -45,8 +45,7 @@ class FontCheck(object):
                 img = Image.new("RGB", (width, height), "black")
                 draw = ImageDraw.Draw(img)
                 font = ImageFont.truetype(font_path, int(width * 0.9),)
-                draw.text((0, 0), char, (255, 255, 255),
-                          font=font)
+                draw.text((0, 0), char, (255, 255, 255),font=font)
                 data = list(img.getdata())
                 sum_val = 0
                 for i_data in data:

@@ -17,8 +17,8 @@ from deep_ocr.reco_text_line import RectImageClassifier
 
 if __name__ == "__main__":
 
-    path_img = os.path.expanduser("/home/user/Projects/data/id_card_img.jpg")
-    debug_path = os.path.expanduser("/home/user/Project/data/debug")
+    path_img = os.path.expanduser("/home/user/Projects/data/hehe13.jpg")
+    debug_path = os.path.expanduser("/home/user/Projects/data/debug")
     if debug_path is not None:
         if os.path.isdir(debug_path):
             shutil.rmtree(debug_path)
@@ -65,6 +65,7 @@ if __name__ == "__main__":
     key_ocr_res = {}
     for key in key_to_segmentation:
         key_ocr_res[key] = []
+        # ============== divider
         print("="*64)
         print(key)
         for i, segment in enumerate(key_to_segmentation[key]):
@@ -81,8 +82,9 @@ if __name__ == "__main__":
         print("="*60)
         print(key)
         for res_i in key_ocr_res[key]:
-            print(type(res_i))
-            print(res_i.encode("utf-8"))
+            #print(type(res_i))
+            print(res_i)
+            #print(res_i.encode("utf-8"))
 
 
     if debug_path is not None:
