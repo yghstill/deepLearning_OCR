@@ -15,17 +15,20 @@ import shutil
 from deep_ocr.lang_aux import LangCharsGenerate
 from deep_ocr.lang_aux import FontCheck
 from deep_ocr.lang_aux import Font2Image
+from deep_ocr.lang_aux import DataAugmentation
 
 if __name__ == "__main__":
 
-    out_caffe_dir = os.path.expanduser("/home/user/Projects/data/caffe_dataset_eng/")
-    font_dir = os.path.expanduser("/home/user/Projects/deepLearning_OCR/chinese_font/")
-    test_ratio = float(options.test_ratio)
-    width = int(options.width)
-    height = int(options.height)
-    need_crop = not options.no_crop
-    margin = int(options.margin)
-    langs = options.langs
+    out_caffe_dir = os.path.expanduser("/home/user/Projects/data/caffe_dataset_lower_eng/")
+    font_dir = os.path.expanduser("/home/user/Projects/deepLearning_OCR/chinese_fonts/")
+    test_ratio = float(0.3)
+    width = int(64)
+    height = int(64)
+    need_crop = False
+    margin = int(4)
+    langs = "lower_eng"
+    rotate = 30
+    rotate_step = 1
 
     image_dir_name = "images"
 
@@ -43,6 +46,18 @@ if __name__ == "__main__":
     y_tag_text_file = os.path.join(out_caffe_dir, "y_tag.txt")
     path_train = os.path.join(out_caffe_dir, "train.txt")
     path_test = os.path.join(out_caffe_dir, "test.txt")
+
+    ## rotate
+    if rotate < 0:
+        rotate = - rotate
+
+    if rotate > 0 and rotate <= 45:
+        all_rotate_angles = []
+        for i in range(0, rotate + 1, rotate_step):
+            all_rotate_angles.append(i)
+        for i in range(-rotate, 0, rotate_step):
+            all_rotate_angles.append(i)
+        print(all_rotate_angles)
 
     verified_font_paths = []
     ## search for file fonts
@@ -69,18 +84,27 @@ if __name__ == "__main__":
             char_dir = os.path.join(images_dir, "%d" % j)
             if not os.path.isdir(char_dir):
                 os.makedirs(char_dir)
-            path_image = os.path.join(
-                char_dir,
-                "%d_%s.jpg" % (i, os.path.basename(verified_font_path)))
-            relative_path_image = os.path.join(
-                image_dir_name, "%d" % j,
-                                "%d_%s.jpg" % (i, os.path.basename(verified_font_path))
-            )
-            font2image.do(verified_font_path, char, path_image)
-            if is_train:
-                train_list.append((relative_path_image, j))
+            if rotate == 0:
+                relative_path_image = os.path.join(image_dir_name, "%d" % j, "%d_%s.jpg" % (i, os.path.basename(verified_font_path)))
+                path_image = os.path.join(char_dir, "%d_%s.jpg" % (i, os.path.basename(verified_font_path)))
+                font2image.do(verified_font_path, path_image, char)
+                if is_train:
+                    train_list.append((relative_path_image, j))
+                else:
+                    test_list.append((relative_path_image, j))
             else:
-                test_list.append((relative_path_image, j))
+                for k in all_rotate_angles:
+                    relative_path_image = os.path.join(image_dir_name, "%d" % j, "%d_%s_%d.jpg" % (i, os.path.basename(verified_font_path), k))
+                    path_image = os.path.join(char_dir, "%d_%s_%d.jpg" % (i, os.path.basename(verified_font_path), k))
+                    font2image.do(verified_font_path, char, path_image, rotate=k)
+                    #font2image.do(verified_font_path, char, path_image)
+                    if is_train:
+                        train_list.append((relative_path_image, j))
+                    else:
+                        test_list.append((relative_path_image, j))
+
+
+
 
     h_y_tag_json_file = open(y_tag_json_file, "w+")
     json.dump(y_to_tag, h_y_tag_json_file)

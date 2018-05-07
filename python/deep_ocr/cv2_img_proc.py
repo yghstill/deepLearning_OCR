@@ -2,6 +2,23 @@
 
 import cv2
 import numpy as np
+from PIL import Image
+from PIL import ImageFont
+from PIL import ImageDraw
+import pickle
+import argparse
+from argparse import RawTextHelpFormatter
+import fnmatch
+import os
+import cv2
+import json
+import random
+import shutil
+import traceback
+import copy
+
+
+
 
 class PreprocessRemoveNonCharNoise(object):
 
