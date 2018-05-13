@@ -17,7 +17,7 @@ from deep_ocr.reco_text_line import RectImageClassifier
 
 if __name__ == "__main__":
 
-    path_img = os.path.expanduser("/home/user/Projects/data/hehe13.jpg")
+    path_img = os.path.expanduser("/home/user/Projects/data/test_id_card/hehe3.jpg")
     debug_path = os.path.expanduser("/home/user/Projects/data/debug")
     if debug_path is not None:
         if os.path.isdir(debug_path):
@@ -25,7 +25,8 @@ if __name__ == "__main__":
         os.makedirs(debug_path)
 
     cls_dir_sim = os.path.expanduser("/home/user/Projects/deep_ocr_workspace/data/chongdata_caffe_cn_sim_digits_64_64")
-    cls_dir_ua = os.path.expanduser("/home/user/Projects/deep_ocr_workspace/data/chongdata_caffe_cn_sim_digits_64_64")
+    #cls_dir_ua = os.path.expanduser("/home/user/Projects/deep_ocr_workspace/data/chongdata_caffe_cn_sim_digits_64_64")
+    cls_dir_ua = os.path.expanduser("/home/user/Projects/data/caffe_dataset_id_num")
 
     caffe_cls_builder = CaffeClsBuilder()
     cls_sim = caffe_cls_builder.build(cls_dir=cls_dir_sim,)
@@ -34,8 +35,7 @@ if __name__ == "__main__":
 
     seg_norm_width = 600
     seg_norm_height = 600
-    preprocess_resize = PreprocessResizeKeepRatio(
-        seg_norm_width, seg_norm_height)
+    preprocess_resize = PreprocessResizeKeepRatio(seg_norm_width, seg_norm_height)
     id_card_img = cv2.imread(path_img)
     id_card_img = preprocess_resize.do(id_card_img)    
     segmentation = Segmentation(debug_path)
@@ -88,6 +88,5 @@ if __name__ == "__main__":
 
 
     if debug_path is not None:
-        path_debug_image_mask = os.path.join(
-            debug_path, "reco_debug_01_image_mask.jpg")
+        path_debug_image_mask = os.path.join(debug_path, "reco_debug_01_image_mask.jpg")
         cv2.imwrite(path_debug_image_mask, id_card_img_mask)

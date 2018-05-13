@@ -44,18 +44,14 @@ class DataAugmentation(object):
         img = cv2.dilate(img, kernel)
         return img
 
-    def do(self, img_list=[]):
-        aug_list= copy.deepcopy(img_list)
-        for i in range(len(img_list)):
-            im = img_list[i]
-            if self.noise and random.random()<0.5:
-                im = self.add_noise(im)
-            if self.dilate and random.random()<0.5:
-                im = self.add_dilate(im)
-            elif self.erode:
-                im = self.add_erode(im)
-            aug_list.append(im)
-        return aug_list
+    def do(self, img):
+        if self.noise and random.random()<0.5:
+            img = self.add_noise(img)
+        if self.dilate and random.random()<0.5:
+            img = self.add_dilate(img)
+        elif self.erode:
+            img = self.add_erode(img)
+        return img
 
 
 class LangCharsGenerate(object):
@@ -112,7 +108,7 @@ class Font2Image(object):
         self.need_crop = need_crop
         self.margin = margin
 
-    def do(self, font_path, char, path_img="", rotate=0):
+    def do(self, font_path, char, path_img="", rotate=0, need_aug=True):
         find_image_bbox = FindImageBBox()
         img = Image.new("RGB", (self.width, self.height), "black")
         draw = ImageDraw.Draw(img)
@@ -140,6 +136,12 @@ class Font2Image(object):
                                                     fill_bg=False,
                                                     margin=self.margin)
                 np_img = preprocess_resize_keep_ratio_fill_bg.do(np_img)
+
+            ## noise
+            if need_aug:
+                data_aug = DataAugmentation()
+                np_img = data_aug.do(np_img)
+
             cv2.imwrite(path_img, np_img)
 
         else:

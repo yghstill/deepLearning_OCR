@@ -19,15 +19,16 @@ from deep_ocr.lang_aux import DataAugmentation
 
 if __name__ == "__main__":
 
-    out_caffe_dir = os.path.expanduser("/home/user/Projects/data/caffe_dataset_lower_eng/")
+    out_caffe_dir = os.path.expanduser("/home/user/Projects/data/caffe_dataset_id_num/")
     font_dir = os.path.expanduser("/home/user/Projects/deepLearning_OCR/chinese_fonts/")
+    #font_dir = os.path.expanduser("/home/user/Projects/deepLearning_OCR/id_num_fonts/")
     test_ratio = float(0.3)
     width = int(64)
     height = int(64)
     need_crop = False
     margin = int(4)
-    langs = "lower_eng"
-    rotate = 30
+    langs = "id_num"
+    rotate = 10
     rotate_step = 1
 
     image_dir_name = "images"
@@ -57,7 +58,7 @@ if __name__ == "__main__":
             all_rotate_angles.append(i)
         for i in range(-rotate, 0, rotate_step):
             all_rotate_angles.append(i)
-        print(all_rotate_angles)
+        #print(all_rotate_angles)
 
     verified_font_paths = []
     ## search for file fonts
