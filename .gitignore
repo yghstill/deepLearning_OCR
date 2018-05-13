@@ -1,3 +1,5 @@
 ./.idea
 python/.idea
 *.pyc
+.idea/*
+.idea
