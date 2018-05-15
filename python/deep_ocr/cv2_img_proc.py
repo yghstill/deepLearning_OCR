@@ -52,6 +52,7 @@ class PreprocessRemoveNonCharNoise(object):
                 bin_img[y:y+h, x:x+w] = 0
         contours = filtered_contours
 
+
 class PreprocessBackgroundMask():
     
     def __init__(self, boundary):
@@ -137,7 +138,6 @@ class FindImageBBox(object):
                 low = i
                 break
         return (left, top, right, low)
-
 
 
 class PreprocessResizeKeepRatio(object):

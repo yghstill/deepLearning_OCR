@@ -7,6 +7,7 @@ from deep_ocr.cv2_img_proc import PreprocessResizeKeepRatioFillBG
 from deep_ocr.utils import extract_peek_ranges_from_array
 from deep_ocr.utils import merge_peek_ranges_mini_non_digits
 
+
 class RectImageClassifier(object):
     def __init__(self, caffe_cls, bin_image, char_set,
                  caffe_cls_width=64, caffe_cls_height=64):
@@ -80,7 +81,8 @@ class RectImageClassifier(object):
             mat_proba[i] = sorted(mat_proba[i], key=lambda x: -x[1])
             ocr_res += mat_proba[i][0][0]
         return ocr_res
-    
+
+
 class RecoTextLine(object):
     def __init__(self, rect_img_clf,
                  char_set=None,
@@ -89,10 +91,7 @@ class RecoTextLine(object):
         self.debug_path = debug_path
         self.rect_img_clf = rect_img_clf
 
-
-    def convert_peek_ranges_into_rects(self,
-                                       peek_ranges,
-                                       line_rect):
+    def convert_peek_ranges_into_rects(self, peek_ranges, line_rect):
         base_x, base_y, base_w, base_h = line_rect
         rects = []
         for peek_range in peek_ranges:
@@ -120,26 +119,18 @@ class RecoTextLine(object):
         ocr_res = None
         ## first segmentation
         vertical_sum = np.sum(img_line, axis=0)
-        peek_ranges = extract_peek_ranges_from_array(
-            vertical_sum,
-            minimun_val=10,
-            minimun_range=2)
+        peek_ranges = extract_peek_ranges_from_array(vertical_sum, minimun_val=10, minimun_range=2)
 
-        rects = self.convert_peek_ranges_into_rects(
-            peek_ranges, line_rect)
+        rects = self.convert_peek_ranges_into_rects(peek_ranges, line_rect)
         self.rect_img_clf.char_set = self.char_set
-        ocr_res = self.rect_img_clf.do_images_maxproba(
-            rects, boundaries, bin_images)
+        ocr_res = self.rect_img_clf.do_images_maxproba(rects, boundaries, bin_images)
         if ocr_res is not None:
             print("before merge..")
             #print(ocr_res.encode("utf-8"))
             print(ocr_res)
-            peek_ranges = merge_peek_ranges_mini_non_digits(
-                peek_ranges, char_w, ocr_res)
-            rects = self.convert_peek_ranges_into_rects(
-                peek_ranges, line_rect)
-            ocr_res = self.rect_img_clf.do_images_maxproba(
-                rects, boundaries, bin_images)
+            peek_ranges = merge_peek_ranges_mini_non_digits(peek_ranges, char_w, ocr_res)
+            rects = self.convert_peek_ranges_into_rects(peek_ranges, line_rect)
+            ocr_res = self.rect_img_clf.do_images_maxproba(rects, boundaries, bin_images)
             print("after merge...")
             #print(ocr_res.encode("utf-8"))
             print(ocr_res)

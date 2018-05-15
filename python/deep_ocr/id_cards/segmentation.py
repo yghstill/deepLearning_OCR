@@ -27,8 +27,8 @@ class Segmentation(object):
         remove_noise = PreprocessRemoveNonCharNoise(char_w)
 
         id_card_img_mask = preprocess_bg_mask.do(color_img)
-        id_card_img_mask[0:int(norm_height*0.05),:] = 0
-        id_card_img_mask[int(norm_height*0.95): ,:] = 0
+        id_card_img_mask[0:int(norm_height*0.05), :] = 0
+        id_card_img_mask[int(norm_height*0.95):, :] = 0
         id_card_img_mask[:, 0:int(norm_width*0.05)] = 0
         id_card_img_mask[:, int(norm_width*0.95):] = 0
 
@@ -38,7 +38,7 @@ class Segmentation(object):
 #        se2 = cv2.getStructuringElement(cv2.MORPH_RECT, (2,2))
 #        mask = cv2.morphologyEx(id_card_img_mask, cv2.MORPH_CLOSE, se1)
 #        id_card_img_mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, se2)
-#  
+
         ## remove right head profile
         left_half_id_card_img_mask = np.copy(id_card_img_mask)
         left_half_id_card_img_mask[:, int(norm_width/2):] = 0
@@ -58,7 +58,8 @@ class Segmentation(object):
         norm_width = shape[1]
 
         gray_id_card_img = cv2.cvtColor(color_img, cv2.COLOR_BGR2GRAY)
-        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
+        #
+        clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
         gray_id_card_img = clahe.apply(gray_id_card_img)
 
         gray_id_card_img = 255 - gray_id_card_img
@@ -78,8 +79,8 @@ class Segmentation(object):
         ## boundary = ([0, 0, 0], [100, 100, 100])
         preprocess_bg_mask = PreprocessBackgroundMask(boundary)
         id_card_img_mask = preprocess_bg_mask.do(color_img)
-        id_card_img_mask[0:int(norm_height*0.05),:] = 0
-        id_card_img_mask[int(norm_height*0.95): ,:] = 0
+        id_card_img_mask[0:int(norm_height*0.05), :] = 0
+        id_card_img_mask[int(norm_height*0.95):, :] = 0
         id_card_img_mask[:, 0:int(norm_width*0.05)] = 0
         id_card_img_mask[:, int(norm_width*0.95):] = 0
 
@@ -103,15 +104,11 @@ class Segmentation(object):
             end_y += 1
             line_img = id_card_img_mask[start_y: end_y]
             vertical_sum = np.sum(line_img, axis=0)
-            vertical_peek_ranges = extract_peek_ranges_from_array(
-                vertical_sum,
-                minimun_val=40,
-                minimun_range=1)
+            vertical_peek_ranges = extract_peek_ranges_from_array(vertical_sum, minimun_val=40, minimun_range=1)
             vertical_peek_ranges2d.append(vertical_peek_ranges)
+
         vertical_peek_ranges2d = merge_chars_into_line_segments(vertical_peek_ranges2d)
-        img_gray_texts = cv2.bitwise_and(gray_id_card_img,
-                                         gray_id_card_img,
-                                         mask=id_card_img_mask)
+        img_gray_texts = cv2.bitwise_and(gray_id_card_img, gray_id_card_img, mask=id_card_img_mask)
 
         key_to_segmentation = {}
         try:
@@ -180,6 +177,7 @@ class Segmentation(object):
                     w = end_x - start_x
                     h = end_y - start_y
                     key_to_segmentation["address"].append((start_x, start_y, w, h))
+
             ## id extraction
             range_y = line_ranges[-1]
             range_x = vertical_peek_ranges2d[-1][0]

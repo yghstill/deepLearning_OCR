@@ -2,6 +2,7 @@
 
 import numpy as np
 
+
 def trim_string(string_data):
     string_data = string_data.replace("    ", "")
     string_data = string_data.replace(" ", "")
@@ -9,6 +10,7 @@ def trim_string(string_data):
     ### for string
     string_data = "".join(list(set(string_data)))
     return string_data
+
 
 def merge_peek_ranges(peek_ranges, char_w):
     new_peek_ranges = []
@@ -22,6 +24,7 @@ def merge_peek_ranges(peek_ranges, char_w):
             cur_range = peek_ranges[i]
     new_peek_ranges.append(cur_range)
     return new_peek_ranges
+
 
 def merge_peek_ranges_mini_non_digits(peek_ranges, char_w, ocr_res):
     digits = u"0123456789"

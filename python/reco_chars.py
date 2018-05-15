@@ -9,6 +9,7 @@ import cv2
 import shutil
 import copy
 
+
 class CaffeCls(object):
     def __init__(self, 
                  model_def,
@@ -28,7 +29,6 @@ class CaffeCls(object):
         shape = cv2_img.shape
         cv2_imgs = cv2_img.reshape((1, shape[0], shape[1]))
         return self.predict_cv2_imgs(cv2_imgs)[0]
-
 
     def _predict_cv2_imgs_sub(self, cv2_imgs, pos_start, pos_end):
         cv2_imgs_sub = cv2_imgs[pos_start: pos_end]
@@ -66,6 +66,7 @@ class CaffeCls(object):
             output_tag_to_max_proba += \
                 self._predict_cv2_imgs_sub(cv2_imgs, i, pos_end)
         return output_tag_to_max_proba
+
 
 class PreprocessCropZeros(object):
 
@@ -106,8 +107,6 @@ class PreprocessCropZeros(object):
             return cv2_gray_img
 
         return cv2_gray_img[top: low+1, left: right+1]
-
-
 
 
 class PreprocessResizeKeepRatio(object):
@@ -231,6 +230,7 @@ class PreprocessResizeKeepRatioFillBG(object):
                                     np.uint8)
             ret_img = self.put_img_into_center(norm_img, ret_img)
         return ret_img
+
 
 def extract_peek_ranges_from_array(array_vals, minimun_val=10, minimun_range=2):
     start_i = None

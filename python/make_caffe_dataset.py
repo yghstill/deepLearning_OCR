@@ -20,8 +20,8 @@ from deep_ocr.lang_aux import DataAugmentation
 if __name__ == "__main__":
 
     out_caffe_dir = os.path.expanduser("/home/user/Projects/data/caffe_dataset_id_num/")
-    font_dir = os.path.expanduser("/home/user/Projects/deepLearning_OCR/chinese_fonts/")
-    #font_dir = os.path.expanduser("/home/user/Projects/deepLearning_OCR/id_num_fonts/")
+    #font_dir = os.path.expanduser("/home/user/Projects/deepLearning_OCR/chinese_fonts/")
+    font_dir = os.path.expanduser("/home/user/Projects/deepLearning_OCR/id_num_fonts/")
     test_ratio = float(0.3)
     width = int(64)
     height = int(64)
