@@ -9,10 +9,49 @@ import sys
 import os
 import numpy as np
 import cv2
+import copy
+import random
 
 from deep_ocr.utils import trim_string
 from deep_ocr.cv2_img_proc import FindImageBBox
 from deep_ocr.cv2_img_proc import PreprocessResizeKeepRatioFillBG
+
+
+class DataAugmentation(object):
+    def __init__(self, noise=True, dilate=True, erode=True):
+        self.noise = noise
+        self.dilate = dilate
+        self.erode = erode
+
+    @classmethod
+    def add_noise(cls, img):
+        # add some noise
+        for i in range(20):
+            temp_x = np.random.randint(0, img.shape[0])
+            temp_y = np.random.randint(0, img.shape[1])
+            img[temp_x][temp_y] = 255
+        return img
+
+    @classmethod
+    def add_erode(cls, img):
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+        img = cv2.erode(img,kernel)
+        return img
+
+    @classmethod
+    def add_dilate(cls, img):
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
+        img = cv2.dilate(img, kernel)
+        return img
+
+    def do(self, img):
+        if self.noise and random.random()<0.5:
+            img = self.add_noise(img)
+        if self.dilate and random.random()<0.5:
+            img = self.add_dilate(img)
+        elif self.erode:
+            img = self.add_erode(img)
+        return img
 
 
 class LangCharsGenerate(object):
@@ -45,8 +84,7 @@ class FontCheck(object):
                 img = Image.new("RGB", (width, height), "black")
                 draw = ImageDraw.Draw(img)
                 font = ImageFont.truetype(font_path, int(width * 0.9),)
-                draw.text((0, 0), char, (255, 255, 255),
-                          font=font)
+                draw.text((0, 0), char, (255, 255, 255), font=font)
                 data = list(img.getdata())
                 sum_val = 0
                 for i_data in data:
@@ -70,13 +108,17 @@ class Font2Image(object):
         self.need_crop = need_crop
         self.margin = margin
 
-    def do(self, font_path, char, path_img):
+    def do(self, font_path, char, path_img="", rotate=0, need_aug=True):
         find_image_bbox = FindImageBBox()
         img = Image.new("RGB", (self.width, self.height), "black")
         draw = ImageDraw.Draw(img)
         font = ImageFont.truetype(font_path, int(self.width * 0.7),)
-        draw.text((0, 0), char, (255, 255, 255),
-                  font=font)
+        draw.text((0, 0), char, (255, 255, 255), font=font)
+
+        ## rotate
+        if rotate != 0:
+            img = img.rotate(rotate)
+
         data = list(img.getdata())
         sum_val = 0
         for i_data in data:
@@ -93,9 +135,15 @@ class Font2Image(object):
                     PreprocessResizeKeepRatioFillBG(self.width, self.height,
                                                     fill_bg=False,
                                                     margin=self.margin)
-                np_img = preprocess_resize_keep_ratio_fill_bg.do(
-                    np_img)
+                np_img = preprocess_resize_keep_ratio_fill_bg.do(np_img)
+
+            ## noise
+            if need_aug:
+                data_aug = DataAugmentation()
+                np_img = data_aug.do(np_img)
+
             cv2.imwrite(path_img, np_img)
+
         else:
             print("%s doesn't exist." % path_img)
 

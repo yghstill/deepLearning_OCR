@@ -11,7 +11,7 @@ layer {
     scale: 0.00390625
   }
   data_param {
-    source: "examples/dunhe_train_char_cn_sim_digits_64_64/dunhe_train_lmdb"
+    source: "/home/user/Projects/data/caffe_dataset_cn_sim/train_lmdb"
     batch_size: 64
     backend: LMDB
   }
@@ -28,7 +28,7 @@ layer {
     scale: 0.00390625
   }
   data_param {
-    source: "examples/dunhe_train_char_cn_sim_digits_64_64/dunhe_val_lmdb"
+    source: "/home/user/Projects/data/caffe_dataset_cn_sim/val_lmdb"
     batch_size: 10
     backend: LMDB
   }
@@ -201,14 +201,14 @@ layer {
   top: "fc10000"
 }
 layer {
-  name: "fc6503"
+  name: "fc6492"
   type: "InnerProduct"
   # learning rate and decay multipliers for the weights
   param { lr_mult: 1 }
   # learning rate and decay multipliers for the biases
   param { lr_mult: 2 }
   inner_product_param {
-    num_output: 6503
+    num_output: 6492
     weight_filler {
       type: "gaussian"
       std: 0.01
@@ -219,12 +219,12 @@ layer {
     }
   }
   bottom: "fc10000"
-  top: "fc6503"
+  top: "fc6492"
 }
 layer {
   name: "accuracy"
   type: "Accuracy"
-  bottom: "fc6503"
+  bottom: "fc6492"
   bottom: "label"
   top: "accuracy"
   include {
@@ -234,7 +234,7 @@ layer {
 layer {
   name: "loss"
   type: "SoftmaxWithLoss"
-  bottom: "fc6503"
+  bottom: "fc6492"
   bottom: "label"
   top: "loss"
 }
