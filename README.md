@@ -8,3 +8,6 @@ Deep Learning on 身份证识别    
 For details, please refer to  http://www.cnblogs.com/ygh1229/p/7224940.html       
 Some work reference http://chongdata.com/articles/?p=5       
 If it involves infringement, please tell the author.
+
+## new Method
+- CTPN: https://github.com/tianzhi0549/CTPN
